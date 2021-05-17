@@ -11,7 +11,6 @@ from examples import custom_style_2
 import re
 from pathlib import Path
 import sys
-import os
 
 # credential_file = f"{Path.home()}/.aws/credentials"
 credential_file = "./credentials_sample"
