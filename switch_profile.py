@@ -2,14 +2,11 @@
 
 from __future__ import print_function, unicode_literals
 
-from pprint import pprint
-from typing import Match
-
-from PyInquirer import prompt, Separator
+from PyInquirer import prompt
 
 from examples import custom_style_2
 import re
-from pathlib import Path
+
 import sys
 
 # credential_file = f"{Path.home()}/.aws/credentials"
@@ -26,15 +23,13 @@ def get_delivery_options(answers):
 
 def validate_aws_profile():
     try:
-        profile_title = ""
         with open(credential_file, "r") as file:
             lines = file.readlines()
             prev_line = ""
             for line in lines:
                 m = re.match(r";?\[(\w+)\]", line)
                 if m and m.group(0) == profile_default_title and prev_line[0] != ";":
-                    raise Exception(
-                        f"Found 'default' profile, please rename it.")
+                    raise Exception("Found 'default' profile, please rename it.")
 
                 prev_line = line
 
