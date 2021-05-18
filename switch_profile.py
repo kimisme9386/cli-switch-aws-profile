@@ -14,13 +14,6 @@ credential_file = "./credentials_sample"
 profile_default_title = "[default]"
 
 
-def get_delivery_options(answers):
-    options = ['bike', 'car', 'truck']
-    if answers['size'] == 'jumbo':
-        options.append('helicopter')
-    return options
-
-
 def validate_aws_profile():
     try:
         with open(credential_file, "r") as file:
