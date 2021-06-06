@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 
-from PyInquirer import prompt
-
-from examples import custom_style_2
+import pathlib
 import re
-import os
 import sys
 
-# credential_file = f"{Path.home()}/.aws/credentials"
-credential_file = f"{os.getcwd()}/credentials_sample1"
+from PyInquirer import prompt
+from examples import custom_style_2
+
+# credential_file = f"{pathlib.Path.home()}/.aws/credentials"
+credential_file = f"{pathlib.Path(__file__).parents[1]}/credentials_sample"
 profile_default_title = "[default]"
 
 
@@ -17,15 +17,15 @@ def validate_aws_profile(credential_file: str):
         lines = file.readlines()
         prev_line = ""
         for line in lines:
+
             m = re.match(r";?\[(\w+)\]", line)
-            if m and m.group(0) == profile_default_title and prev_line[0] != ";":
+            if m and m.group(0) == profile_default_title and (len(prev_line) < 1 or prev_line[0] != ";"):
                 raise Exception("Found 'default' profile, please rename it.")
 
             prev_line = line
 
 
 def get_aws_profiles(credential_file: str) -> dict:
-
     profiles = dict()
     profile_title = ""
     with open(credential_file, "r") as file:
@@ -43,12 +43,9 @@ def get_aws_profiles(credential_file: str) -> dict:
 
 
 def write_aws_profiles(profiles: dict) -> None:
-    try:
-        with open(credential_file, "w") as file:
-            for profile, item in profiles.items():
-                file.write("".join(item))
-    except IOError:
-        raise Exception(f"{credential_file} is not found.")
+    with open(credential_file, "w") as file:
+        for profile, item in profiles.items():
+            file.write("".join(item))
 
 
 if __name__ == '__main__':
