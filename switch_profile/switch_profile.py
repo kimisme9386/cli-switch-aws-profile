@@ -43,6 +43,18 @@ def get_aws_profiles(credential_file: str) -> dict:
     return profiles
 
 
+def change_default_profile(profiles: dict) -> None:
+    # Remove origin default profile title and do uncomment
+    for profile, item in profiles.items():
+        if item[1].find(profile_default_title) != -1 and item[0][0] == ";":
+            profiles[profile][0] = profiles[profile][0][1:]
+            del profiles[profile][1:2]
+
+    # Append [default] title to choose profile
+    profiles[profile_selected][0] = f";{profiles[profile_selected][0]}"
+    profiles[profile_selected].insert(1, f"{profile_default_title}\n")
+
+
 def write_aws_profiles(profiles: dict) -> None:
     with open(credential_file, "w") as file:
         for profile, item in profiles.items():
@@ -84,14 +96,6 @@ if __name__ == '__main__':
         print('Selected profile is default already.')
         sys.exit(0)
 
-    # Remove origin default profile title and do uncomment
-    for profile, item in profiles.items():
-        if item[1].find(profile_default_title) != -1 and item[0][0] == ";":
-            profiles[profile][0] = profiles[profile][0][1:]
-            del profiles[profile][1:2]
-
-    # Append [default] title to choose profile
-    profiles[profile_selected][0] = f";{profiles[profile_selected][0]}"
-    profiles[profile_selected].insert(1, f"{profile_default_title}\n")
-
+    change_default_profile(profiles)
+    
     write_aws_profiles(profiles)
