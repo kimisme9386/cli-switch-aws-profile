@@ -9,7 +9,7 @@ from examples import custom_style_2
 
 # credential_file = f"{pathlib.Path.home()}/.aws/credentials"
 credential_file = f"{pathlib.Path(__file__).parents[1]}/credentials_sample"
-profile_default_title = "[default]"
+profile_default_title = "default"
 
 
 def validate_aws_profile(credential_file: str):
@@ -19,7 +19,7 @@ def validate_aws_profile(credential_file: str):
         for line in lines:
 
             m = re.match(r";?\[(\w+)\]", line)
-            if m and m.group(0) == profile_default_title and (len(prev_line) < 1 or prev_line[0] != ";"):
+            if m and m.group(1) == profile_default_title and (len(prev_line) < 1 or prev_line[0] != ";"):
                 raise Exception("Found 'default' profile, please rename it.")
 
             prev_line = line
@@ -32,7 +32,7 @@ def get_aws_profiles(credential_file: str) -> dict:
         lines = file.readlines()
         for line in lines:
             m = re.match(r";?\[(\w+)\]", line)
-            if m and m.group(0) != profile_default_title:
+            if m and m.group(1) != profile_default_title:
                 profile_title = line[1:] if line[0] == ";" else line
                 profile_title = profile_title.replace("\n", "")
                 profiles.update({profile_title: [line]})
