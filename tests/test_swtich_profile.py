@@ -31,3 +31,19 @@ def test_get_aws_profile_sample1():
                                    "aws_access_key_id = AKI11111111111111111\n",
                                    "aws_secret_access_key = aaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbb\n",
                                    "\n"]
+
+
+def test_change_default_profile():
+    file = str(pathlib.Path(__file__).parents[0]) + '/credentails_change_default'
+    profiles = switch_profile.get_aws_profiles(file)
+    switch_profile.change_default_profile(profiles, '[chris]', '[default]')
+    assert list(profiles.keys()) == ['[chris]', '[wondercore]', '[assume]']
+    assert profiles["[chris]"] == [";[chris]\n",
+                                   "[default]\n",
+                                   "aws_access_key_id = AKI11111111111111111\n",
+                                   "aws_secret_access_key = aaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbb\n",
+                                   "\n"]
+    assert profiles["[wondercore]"] == ["[wondercore]\n",
+                                        "aws_access_key_id = AKI22222222222222222\n",
+                                        "aws_secret_access_key = cccccccccccccccccccccccdddddddddddddddddd\n",
+                                        "\n"]

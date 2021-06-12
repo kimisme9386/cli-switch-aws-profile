@@ -43,7 +43,7 @@ def get_aws_profiles(credential_file: str) -> dict:
     return profiles
 
 
-def change_default_profile(profiles: dict) -> None:
+def change_default_profile(profiles: dict, profile_selected: str, profile_default_title: str) -> None:
     # Remove origin default profile title and do uncomment
     for profile, item in profiles.items():
         if item[1].find(profile_default_title) != -1 and item[0][0] == ";":
@@ -96,6 +96,6 @@ if __name__ == '__main__':
         print('Selected profile is default already.')
         sys.exit(0)
 
-    change_default_profile(profiles)
-    
+    change_default_profile(profiles, profile_selected, profile_default_title)
+
     write_aws_profiles(profiles)
