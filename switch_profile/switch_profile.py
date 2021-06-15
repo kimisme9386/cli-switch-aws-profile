@@ -38,9 +38,7 @@ def get_aws_profiles(credential_file: str) -> dict:
         lines = file.readlines()
         for line in lines:
             m = re.match(r";?\[(\w+)\]", line)
-            if m and m.group(1) == assume_role_key:
-                continue
-            elif m and m.group(1) != profile_default_title_name:
+            if m and m.group(1) != profile_default_title_name:
                 profile_title = line[1:] if line[0] == ";" else line
                 profile_title = profile_title.replace("\n", "")
                 profiles.update({profile_title: [line]})
@@ -123,7 +121,8 @@ if __name__ == '__main__':
             'type': 'list',
             'name': 'profile',
             'message': 'Choose one AWS Profile to set default',
-            'choices': profiles.keys(),
+            # 'choices': profiles.keys(),
+            'choices': list(filter(lambda profile: True if profile.find(assume_role_profile_name) == -1 else False, list(profiles.keys())))
         },
         {
             'type': 'confirm',
