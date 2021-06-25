@@ -15,6 +15,7 @@ profile_default_title = "[default]"
 profile_default_title_name = "default"
 
 assume_role_key = 'custom_assume_role'
+assume_role_duration_seconds_key = 'duration_seconds'
 assume_role_profile_name = '[custom_assume_role]'
 
 
@@ -66,9 +67,11 @@ def write_aws_profiles(profiles: dict) -> None:
             file.write("".join(item))
 
 
-def execute_assume_role(role: str) -> Tuple[str, bool]:
+def execute_assume_role(role: str, input_duration_seconds: int) -> Tuple[str, bool]:
     bash_file = f"{pathlib.Path(__file__).parents[1]}/assume-role.sh"
-    process = subprocess.Popen(['sh', bash_file, role],
+    duration_seconds = input_duration_seconds if input_duration_seconds > 0 else 28800
+
+    process = subprocess.Popen(['sh', bash_file, role, str(duration_seconds)],
                                stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE)
     stdout, stderr = process.communicate()
@@ -88,6 +91,29 @@ def get_selected_profile_role_name(profile_content: list) -> str:
             return str(value).strip()
 
     return ''
+
+
+def get_selected_duration_seconds(profile_content: list) -> int:
+    for content in profile_content:
+        if content.find("=") == -1:
+            continue
+        key, value = content.split("=")
+        if str(key).strip() == assume_role_duration_seconds_key:
+            return int(str(value).strip())
+
+    return -1
+
+
+def get_output_role_duration_seconds(output: str) -> str:
+    role_data = []
+    for content in output.split("\n"):
+        if content.find("=") == -1:
+            continue
+        key, value = content.split("=")
+        if str(key).strip() in ["assume_role_name", assume_role_duration_seconds_key]:
+            role_data.append(f"{key.replace('_', ' ')}: {value}")
+
+    return "\n".join(role_data)
 
 
 def add_assume_role_default_profile(
@@ -136,6 +162,12 @@ if __name__ == '__main__':
             'message': 'Input your role name to assume role?',
             'when': lambda answers: answers['assume_role']
         },
+        {
+            'type': 'input',
+            'name': 'duration_seconds',
+            'message': 'Input your maximum duration seconds of assume role?(Default 28800)',
+            'when': lambda answers: answers['assume_role']
+        },
     ]
 
     answers = prompt(questions, style=custom_style_2)
@@ -155,12 +187,16 @@ if __name__ == '__main__':
         role_name = (answers.get('role_name') if answers.get('role_name')
                      else get_selected_profile_role_name(profiles[profile_selected]))
 
-        output, err = execute_assume_role(role_name)
+        duration_seconds = (answers.get('duration_seconds') if answers.get('duration_seconds')
+                            else get_selected_duration_seconds(profiles[profile_selected]))
+
+        output, err = execute_assume_role(role_name, duration_seconds)
         if err:
             print(output)
             sys.exit(0)
 
         add_assume_role_default_profile(profiles, profile_default_title, assume_role_profile_name, output)
         write_aws_profiles(profiles)
+        print(get_output_role_duration_seconds(output))
 
-        print('Use "aws sts get-caller-identity" to identify who you are.\n')
+    print('Use "aws sts get-caller-identity" to identify who you are.\n')
