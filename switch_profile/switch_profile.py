@@ -109,7 +109,7 @@ def get_output_role_duration_seconds(output: str) -> str:
     for content in output.split("\n"):
         if content.find("=") == -1:
             continue
-        key, value = content.split("=")
+        key, value = content.split("=", 1)
         if str(key).strip() in ["assume_role_name", assume_role_duration_seconds_key]:
             role_data.append(f"{key.replace('_', ' ')}: {value}")
 
