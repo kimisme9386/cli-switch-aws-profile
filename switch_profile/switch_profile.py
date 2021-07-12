@@ -136,7 +136,7 @@ def add_assume_role_default_profile(
     profiles.update({assume_role_profile_name: content})
 
 
-if __name__ == '__main__':
+def main():
     validate_aws_profile(credential_file)
     profiles = get_aws_profiles(credential_file)
     if len(profiles.keys()) < 1:
@@ -200,3 +200,7 @@ if __name__ == '__main__':
         print(get_output_role_duration_seconds(output))
 
     print('Use "aws sts get-caller-identity" to identify who you are.\n')
+
+
+if __name__ == '__main__':
+    main()
