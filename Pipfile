@@ -5,6 +5,10 @@ name = "pypi"
 
 [packages]
 pyinquirer = "*"
+wheel = "*"
+setuptools = "*"
+twine = "*"
+switchawsprofile = {editable = true, path = "."}
 
 [dev-packages]
 pytest = "*"
