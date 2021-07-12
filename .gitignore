@@ -2,3 +2,5 @@
 .vscode
 build
 dist
+switch_aws_profile.egg-info
+pyproject.toml

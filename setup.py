@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 setup(
-    name='SwitchAWSProfile',
+    name='switch-aws-profile',
     version='0.0.1',
     author='Chris Yang',
     author_email='kimisme9386@gmail.com',
