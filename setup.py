@@ -4,7 +4,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 setup(
     name='switch-aws-profile',
-    version='0.0.1',
+    version='0.0.2',
     author='Chris Yang',
     author_email='kimisme9386@gmail.com',
     license='MIT',
@@ -23,5 +23,7 @@ setup(
     entry_points='''
         [console_scripts]
         awssp=switch_profile.app:main
-    '''
+    ''',
+    package_dir={'switch_profile': 'switch_profile'},
+    package_data={'switch_profile': ['scripts/*.sh']},
 )

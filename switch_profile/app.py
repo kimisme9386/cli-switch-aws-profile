@@ -68,7 +68,7 @@ def write_aws_profiles(profiles: dict) -> None:
 
 
 def execute_assume_role(role: str, input_duration_seconds: int) -> Tuple[str, bool]:
-    bash_file = f"{pathlib.Path(__file__).parents[1]}/assume-role.sh"
+    bash_file = f"{pathlib.Path(__file__).parents[0]}/scripts/assume-role.sh"
     duration_seconds = input_duration_seconds if input_duration_seconds > 0 else 28800
 
     process = subprocess.Popen(['sh', bash_file, role, str(duration_seconds)],
