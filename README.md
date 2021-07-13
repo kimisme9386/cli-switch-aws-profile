@@ -1,6 +1,6 @@
 # Switch AWS Profile on local
 
-[![Tests](https://github.com/kimisme9386/cli-switch-aws-profile/actions/workflows/tests.yml/badge.svg)](https://github.com/kimisme9386/cli-switch-aws-profile/actions/workflows/tests.yml)
+[![Deploy](https://github.com/kimisme9386/cli-switch-aws-profile/actions/workflows/deploy.yml/badge.svg)](https://github.com/kimisme9386/cli-switch-aws-profile/actions/workflows/deploy.yml)
 
 ![demo-swtich-aws-profile](https://user-images.githubusercontent.com/7465652/125384155-0ebbff80-e3cb-11eb-893d-4bae4d252663.gif)
 
