@@ -1,6 +1,8 @@
 # Switch AWS Profile on local
 
-[![Deploy](https://github.com/kimisme9386/cli-switch-aws-profile/actions/workflows/deploy.yml/badge.svg)](https://github.com/kimisme9386/cli-switch-aws-profile/actions/workflows/deploy.yml)
+| GitHub Actions                                                                                                                                                                                |                                                      Pypi                                                       |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------: |
+| [![Deploy](https://github.com/kimisme9386/cli-switch-aws-profile/actions/workflows/deploy.yml/badge.svg)](https://github.com/kimisme9386/cli-switch-aws-profile/actions/workflows/deploy.yml) | [![PyPI version](https://badge.fury.io/py/switch-aws-profile.svg)](https://badge.fury.io/py/switch-aws-profile) |
 
 ![demo-swtich-aws-profile](https://user-images.githubusercontent.com/7465652/125384155-0ebbff80-e3cb-11eb-893d-4bae4d252663.gif)
 
