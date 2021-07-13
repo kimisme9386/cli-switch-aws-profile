@@ -187,7 +187,7 @@ def main():
         role_name = (answers.get('role_name') if answers.get('role_name')
                      else get_selected_profile_role_name(profiles[profile_selected]))
 
-        duration_seconds = (answers.get('duration_seconds') if answers.get('duration_seconds')
+        duration_seconds = (int(answers.get('duration_seconds')) if answers.get('duration_seconds')
                             else get_selected_duration_seconds(profiles[profile_selected]))
 
         output, err = execute_assume_role(role_name, duration_seconds)
