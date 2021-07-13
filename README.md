@@ -10,6 +10,11 @@ Choose one AWS profile to set default when you have multiple AWS profile.
 
 Typically, the location of credential file is ` ~/.aws/credentials`
 
+## Platform support
+
+- macOS (test ok)
+- Linux (ready for test)
+
 ## Feature
 
 - Switch AWS profile for setting default
@@ -53,3 +58,11 @@ duration_seconds = 3600
 If custom_assume_role is specified, the question as `Input your role name to assume role` can be pressed enter to pass it directly.
 
 `duration_seconds` setting same as the custom_assume_role.
+
+## Installation
+
+```
+pip3 install switch-aws-profile
+```
+
+After installation, use `awssp` command directly
