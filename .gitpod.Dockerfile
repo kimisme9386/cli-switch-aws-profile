@@ -2,7 +2,6 @@ FROM gitpod/workspace-full
 
 USER root
 
-# Install custom tools, runtime, etc.
 RUN ["apt-get", "update"]
 
 RUN ["apt-get", "install", "-y", "zsh"]
