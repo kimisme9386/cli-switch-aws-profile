@@ -1,5 +1,6 @@
 .idea
 .vscode
+.venv
 build
 dist
 switch_aws_profile.egg-info
