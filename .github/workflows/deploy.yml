@@ -39,4 +39,4 @@ jobs:
           pipenv run python3 setup.py bdist_wheel
       - name: Upload to pypi
         run: |
-          pipenv run twine upload dist/* -u __token__ -p ${PYPI_PASSWORD}
+          pipenv run twine upload --skip-existing dist/* -u __token__ -p ${PYPI_PASSWORD}
