@@ -13,9 +13,13 @@ switchawsprofile = {editable = true, path = "."}
 [dev-packages]
 pytest = "*"
 flake8 = "*"
+black = "*"
 
 [requires]
 python_version = "3.8"
 
 [scripts]
 tests = "pytest -svvv"
+
+[pipenv]
+allow_prereleases = true

@@ -14,9 +14,9 @@ credential_file = f"{pathlib.Path.home()}/.aws/credentials"
 profile_default_title = "[default]"
 profile_default_title_name = "default"
 
-assume_role_key = 'custom_assume_role'
-assume_role_duration_seconds_key = 'duration_seconds'
-assume_role_profile_name = '[custom_assume_role]'
+assume_role_key = "custom_assume_role"
+assume_role_duration_seconds_key = "duration_seconds"
+assume_role_profile_name = "[custom_assume_role]"
 
 
 def validate_aws_profile(credential_file: str):
@@ -26,7 +26,11 @@ def validate_aws_profile(credential_file: str):
         for line in lines:
 
             m = re.match(r";?\[(\w+)\]", line)
-            if m and m.group(1) == profile_default_title_name and (len(prev_line) < 1 or prev_line[0] != ";"):
+            if (
+                m
+                and m.group(1) == profile_default_title_name
+                and (len(prev_line) < 1 or prev_line[0] != ";")
+            ):
                 raise Exception("Found 'default' profile, please rename it.")
 
             prev_line = line
@@ -49,7 +53,9 @@ def get_aws_profiles(credential_file: str) -> dict:
     return profiles
 
 
-def change_default_profile(profiles: dict, profile_selected: str, profile_default_title: str) -> None:
+def change_default_profile(
+    profiles: dict, profile_selected: str, profile_default_title: str
+) -> None:
     # Remove origin default profile title and do uncomment
     for profile, item in profiles.items():
         if item[1].find(profile_default_title) != -1 and item[0][0] == ";":
@@ -71,9 +77,11 @@ def execute_assume_role(role: str, input_duration_seconds: int) -> Tuple[str, bo
     bash_file = f"{pathlib.Path(__file__).parents[0]}/scripts/assume-role.sh"
     duration_seconds = input_duration_seconds if input_duration_seconds > 0 else 28800
 
-    process = subprocess.Popen(['sh', bash_file, role, str(duration_seconds)],
-                               stdout=subprocess.PIPE,
-                               stderr=subprocess.PIPE)
+    process = subprocess.Popen(
+        ["sh", bash_file, role, str(duration_seconds)],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
     stdout, stderr = process.communicate()
 
     if stderr:
@@ -90,7 +98,7 @@ def get_selected_profile_role_name(profile_content: list) -> str:
         if str(key).strip() == assume_role_key:
             return str(value).strip()
 
-    return ''
+    return ""
 
 
 def get_selected_duration_seconds(profile_content: list) -> int:
@@ -117,14 +125,17 @@ def get_output_role_duration_seconds(output: str) -> str:
 
 
 def add_assume_role_default_profile(
-        profiles: dict,
-        profile_default_title: str,
-        assume_role_profile_name: str,
-        assume_role_profile_content: str
+    profiles: dict,
+    profile_default_title: str,
+    assume_role_profile_name: str,
+    assume_role_profile_content: str,
 ) -> None:
     # Remove origin default profile title and do uncomment
     for profile, item in profiles.items():
-        if item[1].find(profile_default_title) != -1 and item[0] == f";{assume_role_profile_name}":
+        if (
+            item[1].find(profile_default_title) != -1
+            and item[0] == f";{assume_role_profile_name}"
+        ):
             del profiles[profile]
 
         elif item[1].find(profile_default_title) != -1 and item[0][0] == ";":
@@ -132,7 +143,11 @@ def add_assume_role_default_profile(
             del profiles[profile][1:2]
 
     # Append assume role profile title to file
-    content = [f";{assume_role_profile_name}\n", f"{profile_default_title}\n", assume_role_profile_content]
+    content = [
+        f";{assume_role_profile_name}\n",
+        f"{profile_default_title}\n",
+        assume_role_profile_content,
+    ]
     profiles.update({assume_role_profile_name: content})
 
 
@@ -144,63 +159,78 @@ def main():
 
     questions = [
         {
-            'type': 'list',
-            'name': 'profile',
-            'message': 'Choose one AWS Profile to set default',
+            "type": "list",
+            "name": "profile",
+            "message": "Choose one AWS Profile to set default",
             # 'choices': profiles.keys(),
-            'choices': list(filter(lambda profile: True if profile.find(assume_role_profile_name) == -1 else False, list(profiles.keys())))
+            "choices": list(
+                filter(
+                    lambda profile: True
+                    if profile.find(assume_role_profile_name) == -1
+                    else False,
+                    list(profiles.keys()),
+                )
+            ),
         },
         {
-            'type': 'confirm',
-            'name': 'assume_role',
-            'message': 'Do you want to assume role for this profile?(Default false)',
-            'default': False,
+            "type": "confirm",
+            "name": "assume_role",
+            "message": "Do you want to assume role for this profile?(Default false)",
+            "default": False,
         },
         {
-            'type': 'input',
-            'name': 'role_name',
-            'message': 'Input your role name to assume role?',
-            'when': lambda answers: answers['assume_role']
+            "type": "input",
+            "name": "role_name",
+            "message": "Input your role name to assume role?",
+            "when": lambda answers: answers["assume_role"],
         },
         {
-            'type': 'input',
-            'name': 'duration_seconds',
-            'message': 'Input your maximum duration seconds of assume role?(Default 28800)',
-            'when': lambda answers: answers['assume_role']
+            "type": "input",
+            "name": "duration_seconds",
+            "message": "Input your maximum duration seconds of assume role?(Default 28800)",
+            "when": lambda answers: answers["assume_role"],
         },
     ]
 
     answers = prompt(questions, style=custom_style_2)
-    is_assume_role = answers.get('assume_role')
+    is_assume_role = answers.get("assume_role")
 
-    profile_selected = answers.get('profile')
+    profile_selected = answers.get("profile")
 
     if profiles[profile_selected][1].find(profile_default_title) != -1:
         if is_assume_role is False:
-            print('Selected profile is default already.')
+            print("Selected profile is default already.")
             sys.exit(0)
     else:
         change_default_profile(profiles, profile_selected, profile_default_title)
         write_aws_profiles(profiles)
 
     if is_assume_role:
-        role_name = (answers.get('role_name') if answers.get('role_name')
-                     else get_selected_profile_role_name(profiles[profile_selected]))
+        role_name = (
+            answers.get("role_name")
+            if answers.get("role_name")
+            else get_selected_profile_role_name(profiles[profile_selected])
+        )
 
-        duration_seconds = (int(answers.get('duration_seconds')) if answers.get('duration_seconds')
-                            else get_selected_duration_seconds(profiles[profile_selected]))
+        duration_seconds = (
+            int(answers.get("duration_seconds"))
+            if answers.get("duration_seconds")
+            else get_selected_duration_seconds(profiles[profile_selected])
+        )
 
         output, err = execute_assume_role(role_name, duration_seconds)
         if err:
             print(output)
             sys.exit(0)
 
-        add_assume_role_default_profile(profiles, profile_default_title, assume_role_profile_name, output)
+        add_assume_role_default_profile(
+            profiles, profile_default_title, assume_role_profile_name, output
+        )
         write_aws_profiles(profiles)
         print(get_output_role_duration_seconds(output))
 
     print('Use "aws sts get-caller-identity" to identify who you are.\n')
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
