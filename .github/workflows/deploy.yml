@@ -34,6 +34,11 @@ jobs:
       - name: Run test suite
         run: |
           pipenv run tests
+      - name: Delete dist directory
+        run: |
+          if [ -d ./dist ]; then
+            rm -rf ./dist
+          fi
       - name: Package and ready for distribution
         run: |
           pipenv run python3 setup.py bdist_wheel
