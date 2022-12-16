@@ -25,7 +25,7 @@ def validate_aws_profile(credential_file: str):
         prev_line = ""
         for line in lines:
 
-            m = re.match(r";?\[(\w+)\]", line)
+            m = re.match(r";?\[(\S+)\]", line)
             if (
                 m
                 and m.group(1) == profile_default_title_name
@@ -42,7 +42,7 @@ def get_aws_profiles(credential_file: str) -> dict:
     with open(credential_file, "r") as file:
         lines = file.readlines()
         for line in lines:
-            m = re.match(r";?\[(\w+)\]", line)
+            m = re.match(r";?\[(\S+)\]", line)
             if m and m.group(1) != profile_default_title_name:
                 profile_title = line[1:] if line[0] == ";" else line
                 profile_title = profile_title.replace("\n", "")
